@@ -20,10 +20,10 @@ public class BrickRawTest extends TestCase {
 
     public void testRaw() {
         Prober prober = SuffixProber.create("json", "css");
-        for (Raw raw : Depository.search("brick-core", prober)) {
+        for (Raw raw : Depository.getRaws("brick-core", prober)) {
             System.out.println(raw.getSource());
         }
-        for (Raw raw : Depository.search("stylesheet", prober)) {
+        for (Raw raw : Depository.getRaws("stylesheet", prober)) {
             System.out.println(raw.getSource());
         }
         assertTrue(true);

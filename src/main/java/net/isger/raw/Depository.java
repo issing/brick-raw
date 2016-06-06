@@ -2,6 +2,7 @@ package net.isger.raw;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * @author issing
  *
  */
-public class Depository {
+public final class Depository {
 
     /** 仓库包属性键 */
     private static final String KEY_DEPOSITORY = "brick.raw.depository";
@@ -37,12 +38,10 @@ public class Depository {
     /** 仓库类配置 */
     private static final String KEY_DEPOT_CLASSES = "depot.classes";
 
-    /** 封套类配置 */
+    /** 包装类配置 */
     private static final String KEY_WRAPPER_CLASSES = "wrapper.classes";
 
     private static final Logger LOG;
-
-    private static final Object LOCKED;
 
     private static final Depository INSTANCE;
 
@@ -53,7 +52,6 @@ public class Depository {
 
     static {
         LOG = LoggerFactory.getLogger(Depository.class);
-        LOCKED = new Object();
         INSTANCE = new Depository();
         final Callable<Object> depotCall = new Callable<Object>() {
             public Object call(Object... args) {
@@ -117,7 +115,7 @@ public class Depository {
      * @param depot
      */
     public static void addDepot(Depot depot) {
-        String name = depot.getClass().getName();
+        String name = depot.name();
         if (LOG.isDebugEnabled()) {
             LOG.info("Achieve depot [{}]", name);
         }
@@ -128,12 +126,31 @@ public class Depository {
     }
 
     /**
+     * 所有仓库
+     * 
+     * @return
+     */
+    public static Map<String, Depot> getDepots() {
+        return Collections.unmodifiableMap(INSTANCE.depots);
+    }
+
+    /**
+     * 获取仓库
+     * 
+     * @param name
+     * @return
+     */
+    public static Depot getDepot(String name) {
+        return INSTANCE.depots.get(name);
+    }
+
+    /**
      * 添加封套
      * 
      * @param wrapper
      */
     public static void addWrapper(Wrapper wrapper) {
-        String name = wrapper.getClass().getName();
+        String name = wrapper.name();
         if (LOG.isDebugEnabled()) {
             LOG.info("Achieve wrapper [{}]", name);
         }
@@ -144,21 +161,22 @@ public class Depository {
     }
 
     /**
-     * 所有仓库
+     * 所有封套
      * 
      * @return
      */
-    public static Depot[] getDepots() {
-        Depot[] depots;
-        synchronized (LOCKED) {
-            depots = INSTANCE.depots.values().toArray(
-                    new Depot[INSTANCE.depots.size()]);
-        }
-        return depots;
+    public static Map<String, Wrapper> getWrappers() {
+        return Collections.unmodifiableMap(INSTANCE.wrappers);
     }
 
-    public static Depot getDepot(String name) {
-        return INSTANCE.depots.get(name);
+    /**
+     * 获取封套
+     * 
+     * @param name
+     * @return
+     */
+    public static Wrapper getWrapper(String name) {
+        return INSTANCE.wrappers.get(name);
     }
 
     /**
@@ -173,7 +191,7 @@ public class Depository {
     }
 
     /**
-     * 搜索原料
+     * 获取原料
      * 
      * @param name
      * @return
@@ -182,6 +200,13 @@ public class Depository {
         return getRaw(name, null);
     }
 
+    /**
+     * 获取原料
+     * 
+     * @param name
+     * @param prober
+     * @return
+     */
     public static Raw getRaw(String name, Prober prober) {
         Raw raw = null;
         List<Raw> raws;
@@ -196,23 +221,26 @@ public class Depository {
     }
 
     /**
-     * 搜索原料
+     * 获取原料
      * 
      * @param name
      * @return
      */
-    public static List<Raw> search(String name) {
-        return search(name, null);
+    public static List<Raw> getRaws(String name) {
+        return getRaws(name, null);
     }
 
-    public static List<Raw> search(String name, Prober prober) {
+    /**
+     * 获取原料
+     * 
+     * @param name
+     * @param prober
+     * @return
+     */
+    public static List<Raw> getRaws(String name, Prober prober) {
         List<Raw> result = new ArrayList<Raw>();
-        List<Raw> raws;
         for (Depot depot : INSTANCE.depots.values()) {
-            raws = depot.search(name, prober);
-            if (raws != null) {
-                result = Helpers.getMerge(result, raws);
-            }
+            Helpers.add(result, depot.search(name, prober));
         }
         return result;
     }
@@ -227,9 +255,16 @@ public class Depository {
         return getArtifact(name, null);
     }
 
+    /**
+     * 包装原料
+     * 
+     * @param name
+     * @param prober
+     * @return
+     */
     public static Artifact getArtifact(String name, Prober prober) {
         Artifact artifact = null;
-        for (Raw raw : search(name, prober)) {
+        for (Raw raw : getRaws(name, prober)) {
             artifact = getArtifact(raw);
             if (artifact != null) {
                 break;
@@ -238,6 +273,12 @@ public class Depository {
         return artifact;
     }
 
+    /**
+     * 包装原料
+     * 
+     * @param raw
+     * @return
+     */
     public static Artifact getArtifact(Raw raw) {
         Artifact artifact = null;
         for (Wrapper wrapper : INSTANCE.wrappers.values()) {
@@ -255,14 +296,21 @@ public class Depository {
      * @param name
      * @return
      */
-    public static List<Artifact> wrap(String name) {
-        return wrap(name, null);
+    public static List<Artifact> getArtifacts(String name) {
+        return getArtifacts(name, null);
     }
 
-    public static List<Artifact> wrap(String name, Prober prober) {
+    /**
+     * 包装原料
+     * 
+     * @param name
+     * @param prober
+     * @return
+     */
+    public static List<Artifact> getArtifacts(String name, Prober prober) {
         Artifact artifact;
         List<Artifact> artifacts = new ArrayList<Artifact>();
-        for (Raw raw : search(name, prober)) {
+        for (Raw raw : getRaws(name, prober)) {
             artifact = getArtifact(raw);
             if (artifact != null) {
                 artifacts.add(artifact);

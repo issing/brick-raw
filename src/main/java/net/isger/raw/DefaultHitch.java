@@ -6,7 +6,7 @@ public class DefaultHitch {
         if (!(source instanceof Depository)) {
             return;
         }
-        Depository.addDepot(BaseDepot.getInstance());
+        Depository.addDepot(ClassLoaderDepot.getInstance());
         Depository.addDepot(new FileDepot());
         Depository.addDepot(new JarDepot());
     }

@@ -6,22 +6,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 文件仓库
+ * 
+ * @author issing
+ *
+ */
 public class FileDepot extends AbstractDepot {
 
-    protected void addPath(File file) {
-        String path;
-        try {
-            path = file.getCanonicalPath();
-        } catch (IOException e) {
-            return;
-        }
-        super.mount(createShelf(path));
-    }
-
-    protected Shelf createShelf(String path) {
-        return new FileShelf(path);
-    }
-
+    /**
+     * 挂载
+     */
     public final void mount(Object describe) {
         File file;
         get: {
@@ -34,8 +29,26 @@ public class FileDepot extends AbstractDepot {
             file = new File(describe.toString());
         }
         if (file.exists() && isMound(file)) {
-            addPath(file);
+            mount(file);
         }
+    }
+
+    /**
+     * 
+     * @param file
+     */
+    protected void mount(File file) {
+        String path;
+        try {
+            path = file.getCanonicalPath();
+        } catch (IOException e) {
+            return;
+        }
+        super.mount(createShelf(path));
+    }
+
+    protected Shelf createShelf(String path) {
+        return new FileShelf(path);
     }
 
     private String decode(String path) {
@@ -50,7 +63,7 @@ public class FileDepot extends AbstractDepot {
         List<Raw> result = new ArrayList<Raw>();
         URL url = (URL) resource;
         if (url != null) {
-            result.add(new BaseRaw(url));
+            result.add(new UrlRaw(url));
         }
         return result;
     }

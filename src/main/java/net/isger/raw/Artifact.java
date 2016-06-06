@@ -8,8 +8,6 @@ package net.isger.raw;
  */
 public interface Artifact {
 
-    public Raw getRaw();
-
-    public Object use(String id, Object... args);
+    public <T> T transform(Class<T> type);
 
 }

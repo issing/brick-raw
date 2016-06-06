@@ -21,13 +21,13 @@ public class JarDepot extends FileDepot {
         return super.isMound(file) || FILTER.accept(file);
     }
 
-    protected void addPath(File file) {
+    protected void mount(File file) {
         if (file.isDirectory()) {
             for (File path : file.listFiles(FILTER)) {
-                super.addPath(path);
+                super.mount(path);
             }
         } else {
-            super.addPath(file);
+            super.mount(file);
         }
     }
 

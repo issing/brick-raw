@@ -5,11 +5,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
-public class BaseRaw implements Raw {
+public class UrlRaw implements Raw {
 
     private URL url;
 
-    public BaseRaw(URL url) {
+    public UrlRaw(URL url) {
         this.url = url;
     }
 
@@ -26,9 +26,9 @@ public class BaseRaw implements Raw {
     }
 
     public boolean equals(Object instance) {
-        boolean result = instance instanceof BaseRaw;
+        boolean result = instance instanceof UrlRaw;
         if (result) {
-            result = url.equals(((BaseRaw) instance).url);
+            result = url.equals(((UrlRaw) instance).url);
         }
         return result;
     }
