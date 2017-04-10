@@ -13,7 +13,7 @@ public class UrlRaw implements Raw {
         this.url = url;
     }
 
-    public Object getSource() {
+    public URL getSource() {
         return url;
     }
 
