@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.isger.util.Callable;
 import net.isger.util.Files;
 import net.isger.util.Helpers;
 import net.isger.util.Reflects;
 import net.isger.util.Strings;
 import net.isger.util.hitch.Director;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 原料托管仓
@@ -82,10 +82,8 @@ public final class Depository {
                 path = Files.toPath(path, CONFIG_DEPOTSITORY);
                 for (URL url : Reflects.getResources(this, path)) {
                     Properties props = Helpers.getProperties(false, url);
-                    Strings.each(getTokenizer(props, KEY_DEPOT_CLASSES),
-                            depotCall);
-                    Strings.each(getTokenizer(props, KEY_WRAPPER_CLASSES),
-                            wrapperCall);
+                    Strings.each(getTokenizer(props, KEY_DEPOT_CLASSES), depotCall);
+                    Strings.each(getTokenizer(props, KEY_WRAPPER_CLASSES), wrapperCall);
                 }
             }
 
