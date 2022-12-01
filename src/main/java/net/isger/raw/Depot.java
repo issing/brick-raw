@@ -8,19 +8,18 @@ import net.isger.util.Named;
  * 仓库接口
  * 
  * @author issing
- *
  */
 public interface Depot extends Named {
 
     /**
-     * 挂载
+     * 挂载仓位
      * 
      * @param describe
      */
     public void mount(Object describe);
 
     /**
-     * 搜索
+     * 搜索原料
      * 
      * @param name
      * @param prober
@@ -29,7 +28,7 @@ public interface Depot extends Named {
     public List<Raw> search(String name, Prober prober);
 
     /**
-     * 卸载
+     * 卸载仓位
      * 
      * @param describe
      */

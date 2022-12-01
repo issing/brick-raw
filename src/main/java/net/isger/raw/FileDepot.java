@@ -10,12 +10,11 @@ import java.util.List;
  * 文件仓库
  * 
  * @author issing
- *
  */
 public class FileDepot extends AbstractDepot {
 
     /**
-     * 挂载
+     * 挂载文件仓位
      */
     public final void mount(Object describe) {
         File file;
@@ -34,6 +33,7 @@ public class FileDepot extends AbstractDepot {
     }
 
     /**
+     * 挂载文件仓位
      * 
      * @param file
      */
@@ -47,18 +47,39 @@ public class FileDepot extends AbstractDepot {
         super.mount(createShelf(path));
     }
 
-    protected Shelf createShelf(String path) {
+    /**
+     * 创建文件仓架
+     * 
+     * @param path
+     * @return
+     */
+    protected FileShelf createShelf(String path) {
         return new FileShelf(path);
     }
 
-    private String decode(String path) {
+    /**
+     * 解码文件路径
+     * 
+     * @param path
+     * @return
+     */
+    protected String decode(String path) {
         return path.replaceAll("(%20)", " ");
     }
 
+    /**
+     * 挂载文件检测
+     * 
+     * @param file
+     * @return
+     */
     protected boolean isMound(File file) {
         return file.isDirectory();
     }
 
+    /**
+     * 创建文件原料
+     */
     protected List<Raw> createRaws(Object resource) {
         List<Raw> result = new ArrayList<Raw>();
         URL url = (URL) resource;

@@ -19,10 +19,9 @@ import net.isger.util.Strings;
 import net.isger.util.hitch.Director;
 
 /**
- * 原料托管仓
+ * 原料保管仓
  * 
  * @author issing
- *
  */
 public final class Depository {
 
@@ -98,6 +97,7 @@ public final class Depository {
                 /* 挂载系统工作环境 */
                 Strings.each(getSystemTokenizer("java.class.path"), mountCall);
                 Strings.each(getSystemTokenizer("java.lib.path"), mountCall);
+                Strings.each(getSystemTokenizer("user.dir"), mountCall);
             }
         }.direct(INSTANCE);
     }
@@ -178,7 +178,7 @@ public final class Depository {
     }
 
     /**
-     * 安装架位
+     * 挂载仓位
      * 
      * @param describe
      */
@@ -244,7 +244,7 @@ public final class Depository {
     }
 
     /**
-     * 包装原料
+     * 原料加工
      * 
      * @param name
      * @return
@@ -254,7 +254,7 @@ public final class Depository {
     }
 
     /**
-     * 包装原料
+     * 原料加工
      * 
      * @param name
      * @param prober
@@ -272,7 +272,7 @@ public final class Depository {
     }
 
     /**
-     * 包装原料
+     * 原料加工
      * 
      * @param raw
      * @return
@@ -289,7 +289,7 @@ public final class Depository {
     }
 
     /**
-     * 包装原料
+     * 原料加工
      * 
      * @param name
      * @return
@@ -299,7 +299,7 @@ public final class Depository {
     }
 
     /**
-     * 包装原料
+     * 原料加工
      * 
      * @param name
      * @param prober
@@ -318,7 +318,7 @@ public final class Depository {
     }
 
     /**
-     * 卸载架位
+     * 卸载仓位
      * 
      * @param describe
      */

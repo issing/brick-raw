@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
  * 抽象仓库类
  * 
  * @author issing
- *
  */
 public abstract class AbstractDepot implements Depot {
 
@@ -24,16 +23,16 @@ public abstract class AbstractDepot implements Depot {
 
     private String name;
 
+    /** 仓架集合 */
     private List<Shelf> shelves;
 
     static {
         LOG = LoggerFactory.getLogger(AbstractDepot.class);
         NOP = new Prober() {
-            private final List<Object> EMPTY = Collections
-                    .unmodifiableList(new ArrayList<Object>());
+            private final List<Object> empty = Collections.unmodifiableList(new ArrayList<Object>());
 
             public List<Object> probe(Shelf shelf, String name) {
-                return EMPTY;
+                return empty;
             }
         };
     }
@@ -53,14 +52,14 @@ public abstract class AbstractDepot implements Depot {
     }
 
     /**
-     * 挂载货架
+     * 挂载仓位
      */
     public void mount(Object describe) {
         if (describe instanceof Shelf && !(shelves.contains(describe))) {
             if (LOG.isDebugEnabled()) {
                 LOG.info("Achieve shelf [{}]", describe);
             }
-            shelves.add((Shelf) describe);
+            shelves.add((Shelf) describe); // 新增仓架
         }
     }
 
@@ -90,11 +89,11 @@ public abstract class AbstractDepot implements Depot {
     protected abstract List<Raw> createRaws(Object resource);
 
     /**
-     * 卸载货架
+     * 卸载仓位
      */
     public void unmount(Object describe) {
         if (describe instanceof Shelf) {
-            shelves.remove(describe);
+            shelves.remove(describe); // 移除仓架
         }
     }
 

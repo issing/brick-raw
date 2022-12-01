@@ -1,5 +1,7 @@
 package net.isger.brick;
 
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -8,10 +10,15 @@ import net.isger.raw.Prober;
 import net.isger.raw.Raw;
 import net.isger.raw.SuffixProber;
 
+/**
+ * 原料仓测试
+ * 
+ * @author issing
+ */
 public class BrickRawTest extends TestCase {
 
-    public BrickRawTest(String testName) {
-        super(testName);
+    public BrickRawTest(String name) {
+        super(name);
     }
 
     public static Test suite() {
@@ -20,12 +27,11 @@ public class BrickRawTest extends TestCase {
 
     public void testRaw() {
         Prober prober = SuffixProber.create("json", "css");
-        for (Raw raw : Depository.getRaws("brick-core", prober)) {
-            System.out.println(raw.getSource());
-        }
-        for (Raw raw : Depository.getRaws("stylesheet", prober)) {
-            System.out.println(raw.getSource());
-        }
-        assertTrue(true);
+        List<Raw> raws = Depository.getRaws("raw", prober);
+        System.out.println(raws);
+        assertTrue(raws.size() == 1);
+        raws = Depository.getRaws("stylesheet", prober);
+        System.out.println(raws);
+        assertTrue(raws.size() == 1);
     }
 }

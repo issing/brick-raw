@@ -3,53 +3,81 @@ package net.isger.raw;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 探测器滚轮
+ * 
+ * @author issing
+ */
 public class ProberMulticaster implements Prober {
 
-    private Prober a;
+    private Prober prev;
 
-    private Prober b;
+    private Prober next;
 
-    protected ProberMulticaster(Prober a, Prober b) {
-        this.a = a;
-        this.b = b;
+    protected ProberMulticaster(Prober prev, Prober next) {
+        this.prev = prev;
+        this.next = next;
     }
 
+    /**
+     * 货架原料探测
+     */
     public List<Object> probe(Shelf shelf, String name) {
         List<Object> result = new ArrayList<Object>();
-        result.addAll(a.probe(shelf, name));
-        result.addAll(b.probe(shelf, name));
+        result.addAll(prev.probe(shelf, name));
+        result.addAll(next.probe(shelf, name));
         return result;
     }
 
-    public static Prober add(Prober a, Prober b) {
-        if (a == null)
-            return b;
-        if (b == null)
-            return a;
-        return new ProberMulticaster(a, b);
+    /**
+     * 添加探测器
+     * 
+     * @param prev
+     * @param next
+     * @return
+     */
+    public static Prober add(Prober prev, Prober next) {
+        if (prev == null)
+            return next;
+        if (next == null)
+            return prev;
+        return new ProberMulticaster(prev, next);
     }
 
-    public static Prober remove(Prober a, Prober b) {
-        if (a == b || a == null) {
+    /**
+     * 移除探测器
+     * 
+     * @param prev
+     * @param next
+     * @return
+     */
+    public static Prober remove(Prober prev, Prober next) {
+        if (prev == next || prev == null) {
             return null;
-        } else if (a instanceof ProberMulticaster) {
-            return ((ProberMulticaster) a).remove(b);
+        } else if (prev instanceof ProberMulticaster) {
+            return ((ProberMulticaster) prev).remove(next);
         } else {
-            return a;
+            return prev;
         }
     }
 
+    /**
+     * 移除探测器
+     * 
+     * @param prober
+     * @return
+     */
     protected Prober remove(Prober prober) {
-        if (prober == a)
-            return b;
-        if (prober == b)
-            return a;
-        Prober a2 = remove(a, prober);
-        Prober b2 = remove(b, prober);
-        if (a2 == a && b2 == b) {
+        if (prober == prev)
+            return next;
+        if (prober == next)
+            return prev;
+        Prober a = remove(prev, prober);
+        Prober b = remove(next, prober);
+        if (a == prev && b == next) {
             return this;
         }
-        return add(a2, b2);
+        return add(a, b);
     }
 
 }

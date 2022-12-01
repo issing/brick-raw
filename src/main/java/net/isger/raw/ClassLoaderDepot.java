@@ -12,10 +12,10 @@ import net.isger.util.Reflects;
  * 类加载器仓库
  * 
  * @author issing
- *
  */
 public final class ClassLoaderDepot extends AbstractDepot implements Shelf {
 
+    /** 仓库实例 */
     private static final Depot INSTANCE;
 
     private final ClassLoader loader;
@@ -29,6 +29,11 @@ public final class ClassLoaderDepot extends AbstractDepot implements Shelf {
         super.mount(this);
     }
 
+    /**
+     * 获取仓库
+     * 
+     * @return
+     */
     public static Depot getInstance() {
         return INSTANCE;
     }
@@ -64,6 +69,7 @@ public final class ClassLoaderDepot extends AbstractDepot implements Shelf {
     }
 
     /**
+     * 创建
      * 
      * @param url
      * @return

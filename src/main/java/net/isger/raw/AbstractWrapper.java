@@ -7,7 +7,6 @@ import net.isger.util.Strings;
  * 抽象封套类
  * 
  * @author issing
- *
  */
 public abstract class AbstractWrapper implements Wrapper {
 
