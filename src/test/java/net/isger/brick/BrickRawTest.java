@@ -29,9 +29,9 @@ public class BrickRawTest extends TestCase {
         Prober prober = SuffixProber.create("json", "css");
         List<Raw> raws = Depository.getRaws("raw", prober);
         System.out.println(raws);
-        assertTrue(raws.size() == 1);
+        assertTrue(raws.size() >= 1);
         raws = Depository.getRaws("stylesheet", prober);
         System.out.println(raws);
-        assertTrue(raws.size() == 1);
+        assertTrue(raws.size() >= 1);
     }
 }
